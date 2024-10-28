@@ -36,15 +36,14 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define	__PRINTF_USART
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart2;
-volatile int giEncoderCnt = 0;
 
 /* USER CODE BEGIN PV */
-#include "printf_debug.h"
+volatile int giEncoderCnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,14 +95,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int iPrevEncoderCnt = 0;
   while (1)
   {
-	  if(iPrevEncoderCnt != giEncoderCnt)
-	  {
-		  iPrevEncoderCnt = giEncoderCnt;
-		  printf("%d\n", iPrevEncoderCnt);
-	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -202,8 +195,8 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : B1_Pin PC12 */
-  GPIO_InitStruct.Pin = B1_Pin|GPIO_PIN_12;
+  /*Configure GPIO pins : B1_Pin ENCA_Pin */
+  GPIO_InitStruct.Pin = B1_Pin|ENCA_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -215,17 +208,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  /*Configure GPIO pin : ENCSW_Pin */
+  GPIO_InitStruct.Pin = ENCSW_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(ENCSW_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_15;
+  /*Configure GPIO pin : ENCB_Pin */
+  GPIO_InitStruct.Pin = ENCB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(ENCB_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
@@ -248,18 +241,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	switch(GPIO_Pin)
 	{
-	case GPIO_PIN_8:	//	SW
+	case ENCSW_Pin:	//	SW
 		giEncoderCnt = 0;
 		break;
 
-	case GPIO_PIN_12:	//	A
-		if(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12))
+	case ENCA_Pin:	//	A
+		if(!HAL_GPIO_ReadPin(ENCB_GPIO_Port, ENCB_Pin))
+		{
 			giEncoderCnt++;
+		}
 		break;
 
-	case GPIO_PIN_15:	//	B
-		if(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
+	case ENCB_Pin:	//	B
+		if(!HAL_GPIO_ReadPin(ENCA_GPIO_Port, ENCA_Pin))
+		{
 			giEncoderCnt--;
+		}
 		break;
 	}
 }

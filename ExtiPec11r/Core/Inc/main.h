@@ -66,10 +66,19 @@ void Error_Handler(void);
 #define USART_RX_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+#define ENCSW_Pin GPIO_PIN_8
+#define ENCSW_GPIO_Port GPIOA
+#define ENCSW_EXTI_IRQn EXTI9_5_IRQn
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define ENCB_Pin GPIO_PIN_15
+#define ENCB_GPIO_Port GPIOA
+#define ENCB_EXTI_IRQn EXTI15_10_IRQn
+#define ENCA_Pin GPIO_PIN_12
+#define ENCA_GPIO_Port GPIOC
+#define ENCA_EXTI_IRQn EXTI15_10_IRQn
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
 
